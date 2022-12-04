@@ -1,10 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -20,20 +17,46 @@ public class Main {
             String firstBackpack = line.substring(0, length / 2);
             String secondBackpack = line.substring(length / 2, length);
             for (String duplicateCharacter : duplicateCharacters) {
-               if (firstBackpack.contains(duplicateCharacter) && (secondBackpack.contains(duplicateCharacter))) {
-                   result += aplhabet.get(duplicateCharacter);
-                   items.add(duplicateCharacter);
-               }
+                if (firstBackpack.contains(duplicateCharacter) && (secondBackpack.contains(duplicateCharacter))) {
+                    result += aplhabet.get(duplicateCharacter);
+                    items.add(duplicateCharacter);
+                }
 
             }
         }
         System.out.println("LITERY: " + items + "\n");
-        aplhabet.keySet().forEach(v ->{
-            if ((items.contains(v))){
+        aplhabet.keySet().forEach(v -> {
+            if ((items.contains(v))) {
                 System.out.println("LITERA: " + v + ", punktów: " + aplhabet.get(v));
             }
         });
         System.out.println("\nWynik: " + result);
+
+        result = 0;
+
+        List<List<String>> elvesGroups = getElvesGroups(lines);
+
+        for (List<String> group : elvesGroups) {
+            Map<String, Long> itemType = new HashMap<>();
+            for (String backpack : group) {
+                Set<String> actualItems = new HashSet<>();
+                for (int i = 0; i < backpack.length(); i++) {
+                    String item = backpack.substring(i, i + 1);
+                    if (!actualItems.contains(item)) {
+                        actualItems.add(item);
+                        itemType.compute(item, (key, val) -> (val != null) ? val + 1L : 1L);
+                    }
+                }
+                if (group.get(2).equals(backpack)) {
+                    itemType.entrySet().removeIf(entry -> entry.getValue() < 3);
+
+                    for (String badge : itemType.keySet()) {
+                        result += aplhabet.get(badge);
+                    }
+                }
+            }
+        }
+        System.out.println("Wynik drugiego zadania: " + result);
     }
 
     private static List<String> checkDuplicateCharacters(String line) {
@@ -55,6 +78,21 @@ public class Main {
         for (actual = 'A'; actual <= 'Z'; ++actual)
             alphabet.put(String.valueOf(actual), priority++);
         return alphabet;
+    }
+
+    private static List<List<String>> getElvesGroups(List<String> lines) {
+        List<List<String>> groupsElves = new ArrayList<>();
+        List<String> group = new ArrayList<>();
+        for (String line : lines) {
+            if (group.size() <= 2) {
+                group.add(line);
+                if (group.size() == 3) {
+                    groupsElves.add(new ArrayList<>(group));
+                    group.clear();
+                }
+            }
+        }
+        return groupsElves;
     }
 }
 
