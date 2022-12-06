@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException, URISyntaxException {
-
         Path filePath = Paths.get(ClassLoader.getSystemResource("input.txt").toURI());
         List<String> file = Files.readAllLines(filePath);
         List<Operation> operations = file.stream().map(Operation::new).collect(Collectors.toList());
