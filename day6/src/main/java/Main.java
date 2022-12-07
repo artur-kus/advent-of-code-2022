@@ -11,12 +11,18 @@ public class Main {
     public static void main(String[] args) throws IOException, URISyntaxException {
         Path filePath = Paths.get(ClassLoader.getSystemResource("input.txt").toURI());
         List<String> file = Files.readAllLines(filePath);
-        String line = file.get(0);
+        //PART ONE
+        solve(file.get(0), 4);
+        //PART TWO
+        solve(file.get(0), 14);
+    }
+
+    private static void solve(String line, int markerLenght) {
         for (int i = 0; i < line.length(); i++) {
-            String substring = line.substring(i, i + 4);
+            String substring = line.substring(i, i + markerLenght);
             Set<Character> checker = substring.chars().mapToObj(c -> (char) c).collect(Collectors.toSet());
-            if (checker.size() == 4) {
-                System.out.println(i+4);
+            if (checker.size() == markerLenght) {
+                System.out.println(i+markerLenght);
                 break;
             }
         }
