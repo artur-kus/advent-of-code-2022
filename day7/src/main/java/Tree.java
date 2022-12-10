@@ -22,6 +22,17 @@ public class Tree {
         }
     }
 
+    public void accept(SecondVisitor v) {
+        v.visit(this);
+        for (Tree e : this.children) {
+            e.accept(v);
+        }
+    }
+
+    public Long roznica(Long allSize){
+        return allSize - getSize();
+    }
+
     public Optional<Tree> findFolder(String folderName) {
         return this.getChildren().stream()
                 .filter(c -> c.getFolderName().equals(folderName))
